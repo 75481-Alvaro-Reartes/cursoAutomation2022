@@ -6,15 +6,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-/*Crear un test en despegar.com que seleccione alojamiento, cargue un destino y fechas, 
- * seleccione
-3 adultos y 1 menor, haga la busqueda, clickee el primer resultado y valide algo 
-de la pagina
-resultante*/
-public class DespegarTest {
-  @Test(description = "Validar sleccionar alojamineto con destino y fechas con 3 adultos y un menor y que figure algo")
-  public void validaBsuquedaAlojamientoDespegar() throws Exception{
+/*Test de pagina despegar que incorpore DataProviders con dsitintos datos*/
+public class DespegarDPTest {
+
+	  @DataProvider (name = "Data Provider Despegar")
+	  public Object[][] metodoDP(){
+		  return new Object[][] { {"Mendoza, Mendoza, Argentina"},{"San Salvador de Jujuy, Jujuy, Argentina"},{"Villa Carlos Paz, Córdoba, Argentina"},
+			   };
+	  }  	
+	
+  @Test(dataProvider = "Data Provider Despegar",description = "Validar sleccionar alojamineto con destino y fechas con 3 adultos y un menor y que figure algo")
+  public void validaBsuquedaAlojamientoDespegar(String ciudad) throws Exception{
 	  System.setProperty("webdriver.edge.driver", "D:\\Instaladores/msedgedriver.exe");
 	  WebDriver driver = new EdgeDriver();
 	  driver.get("https://www.despegar.com.ar");
@@ -26,10 +30,11 @@ public class DespegarTest {
 	  
 	 WebElement searchInputOrigen = driver.findElement(By.cssSelector("div.input-container>input[placeholder='Ingresá una ciudad, alojamiento o punto de interés']"));
 	  //Assert.assertTrue(searchInputOrigen.isDisplayed());
+	 Assert.assertTrue(searchInputOrigen.isDisplayed(), "Input no Visible");
 	  searchInputOrigen.click();
 	  
-	  searchInputOrigen.sendKeys("San Salvador de Jujuy, Jujuy, Argentina");
-	  Thread.sleep(1000);
+	  searchInputOrigen.sendKeys(ciudad);
+	  Thread.sleep(3000);
 	  searchInputOrigen.sendKeys(Keys.CONTROL);
 	  Thread.sleep(3000);
 	  //searchInputOrigen.sendKeys(Keys.ENTER);
@@ -40,13 +45,13 @@ public class DespegarTest {
 	  WebElement fechaDesde = driver.findElement(By.xpath("//div[@id='searchbox-sbox-box-hotels']//div[@class='sbox5-box-dates-checkbox-container']//div[@class='sbox5-dates-input1']"));
 	  fechaDesde.click();
 	  Thread.sleep(2000);
-	  WebElement fechaDesdeSeleccionado = driver.findElement(By.xpath("//div[@class='sbox5-floating-tooltip sbox5-floating-tooltip-opened']//div[@class='sbox5-monthgrid'][@data-month='2022-03']//div[@class='sbox5-monthgrid-datenumber-number'][text() = '26']"));
+	  WebElement fechaDesdeSeleccionado = driver.findElement(By.xpath("//div[@class='sbox5-floating-tooltip sbox5-floating-tooltip-opened']//div[@class='sbox5-monthgrid'][@data-month='2022-03']//div[@class='sbox5-monthgrid-datenumber-number'][text() = '20']"));
 	  fechaDesdeSeleccionado.click();
 	  
 	  WebElement fechaHasta = driver.findElement(By.xpath("//div[@id='searchbox-sbox-box-hotels']//div[@class='sbox5-box-dates-checkbox-container']//div[@class='sbox5-dates-input2']"));
 	  fechaHasta.click();
 	  Thread.sleep(2000);
-	  WebElement fechaHastaSeleccionado = driver.findElement(By.xpath("//div[@class='sbox5-floating-tooltip sbox5-floating-tooltip-opened']//div[@class='sbox5-monthgrid'][@data-month='2022-03']//div[@class='sbox5-monthgrid-datenumber-number'][text() = '28']"));
+	  WebElement fechaHastaSeleccionado = driver.findElement(By.xpath("//div[@class='sbox5-floating-tooltip sbox5-floating-tooltip-opened']//div[@class='sbox5-monthgrid'][@data-month='2022-03']//div[@class='sbox5-monthgrid-datenumber-number'][text() = '23']"));
 	  fechaHastaSeleccionado.click();
 	  Thread.sleep(2000);
 	  
@@ -85,7 +90,7 @@ public class DespegarTest {
 	  WebElement btnBuscar = driver.findElement(By.xpath("//button[@class='sbox5-box-button-ovr sbox5-3-btn -secondary -icon -lg']//em[@class='btn-text'][text() = 'Buscar']"));
 	  btnBuscar.click();
 	  
-	  WebElement tituloPreViaje = driver.findElement(By.xpath("//div[@class='text-container']/h6[@class='main-text']"));
+	  WebElement tituloPreViaje = driver.findElement(By.xpath("//div[@class='results-banner-inner']//h6[@class='main-text']"));
 	  Assert.assertTrue(tituloPreViaje.isDisplayed());
 	  System.out.println("Texto encontrado pre Viaje: "+ tituloPreViaje.getText());
 	  
@@ -93,3 +98,4 @@ public class DespegarTest {
 	  driver.close();
   }
 }
+
