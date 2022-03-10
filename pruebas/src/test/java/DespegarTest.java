@@ -1,12 +1,12 @@
-package tests;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.selenium.driver.DriverFactory;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 /*Crear un test en despegar.com que seleccione alojamiento, cargue un destino y fechas, 
@@ -17,17 +17,21 @@ resultante*/
 public class DespegarTest {
   @Test(description = "Validar sleccionar alojamineto con destino y fechas con 3 adultos y un menor y que figure algo")
   public void validaBsuquedaAlojamientoDespegar() throws Exception{
-	  System.setProperty("webdriver.edge.driver", "D:\\Instaladores/msedgedriver.exe");
-	  WebDriver driver = new EdgeDriver();
-	  driver.get("https://www.despegar.com.ar");
-	  driver.manage().window().maximize();
-	  Thread.sleep(1000);
+	  //System.setProperty("webdriver.edge.driver", "D:\\Instaladores/msedgedriver.exe");
+	  
+	  WebDriver driver = null;
+	  driver = DriverFactory.LevantarBrowser( driver, "CHROME", "https://www.despegar.com.ar");
+	  //driver.get("https://www.despegar.com.ar");
+	  //driver.manage().window().maximize();
+	  
+	  //Thread.sleep(1000);
 	  
 	  WebDriverWait wait = new WebDriverWait(driver, 30);
 	  
-	  
+	  wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.header-products-container>ul>li>a[title ='Alojamientos']")));
 	  WebElement alojamiento = driver.findElement(By.cssSelector("div.header-products-container>ul>li>a[title ='Alojamientos']"));
 	  alojamiento.click();
+	  
 	  wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.input-container>input[placeholder='Ingresá una ciudad, alojamiento o punto de interés']")));
 	  WebElement searchInputOrigen = driver.findElement(By.cssSelector("div.input-container>input[placeholder='Ingresá una ciudad, alojamiento o punto de interés']"));
 	  //Assert.assertTrue(searchInputOrigen.isDisplayed());
@@ -133,3 +137,4 @@ public class DespegarTest {
 	  driver.close();
   }
 }
+
